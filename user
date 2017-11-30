@@ -1,0 +1,25 @@
+package BL;
+
+import BO.User;
+import DAL.DALUser;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+
+
+public class BLUser {
+       public static void insert(User user) throws Exception{
+        user.setHashPassword(hashPassword(user.getPassword()));
+        DALUser.insert(user);
+    }
+    
+    public static boolean authentificate(User user) throws Exception{
+        user.setHashPassword(hashPassword(user.getPassword()));
+        return DALUser.authentificate(user);
+    }
+    
+    public static byte[] hashPassword(String password) throws NoSuchAlgorithmException{
+        MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
+        messageDigest.update(password.getBytes());
+        return messageDigest.digest();
+    }
+}
